@@ -1,74 +1,70 @@
 package com.events.EventsDAO;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeSet;
+
 import com.events.pojos.Event;
 
 public class EventDAOImpl implements EventsDAO 
 {
-	private Event[] events;
-	private int eventCount;
+	private HashMap<String,Event> events;
+	static TreeSet<Event> sortedEvents=new TreeSet<Event>();
+	static TreeSet<Event> sortedEventsByDate=new TreeSet<Event>(new DateComparator());
+	
 
 	public EventDAOImpl(int capacity)
 	{
-		this.events=new Event[capacity];
-		this.eventCount=0;
+		this.events=new HashMap<String,Event>(capacity);
+	 
 	}
 
 	@Override
 	public boolean addEvent(Event event) {
 
-		if(events.length==0)
-		{
-			events[eventCount++]=event;
-		}
+		events.put(event.getEventName(), event);
 		
-		else if(eventCount > events.length )
-		{
-			return false; // Array if full
-		}
-		else {
-		events[eventCount++]=event;
-		}
 		return true;
 	}
 
 	@Override
-	public Event[] getAllEvents() {
-		Event[] availableEvents = new Event[eventCount];
-		System.arraycopy(events, 0, availableEvents, 0, eventCount);	
-		if(events.length<=0)
+	public TreeSet<Event> getAllEvents() {
+
+		if(events.isEmpty())
 			return null;
-		else
-			return availableEvents;
+		else {
+		
+		   
+		for (Map.Entry<String, Event> entry : events.entrySet()) {
+			
+			 sortedEvents.add(entry.getValue()); 
+			
+		}
+		
+		      
+		return sortedEvents;
+		}
+			
 	}
 
 	@Override
-	public boolean deleteEvent(String eventId) {
-		for(int i =0; i< eventCount; i++)
-		{
-			if(events[i].getEventId().equals(eventId))
-			{
-				for(int j = i; j < eventCount-1 ;j++)
-				{
-					events[j] = events[j+1]; // shifting elements after deleting 
-				}
-				events[--eventCount]=null; // clearning the last element
-				return true;
-			}
+	public boolean deleteEvent(String eventName)
+	{
+		if(events.containsKey(eventName)) {
+			events.remove(eventName);
+			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public Event getEventById(String eventId) {
+	public Event getEventByName(String eventName) {
 
 		Event res= null;
-		for(int i =0 ;i< eventCount ; i++)
-		{
-			if(events[i].getEventId().equals(eventId))
-			{
-				res=events[i];
-			}
-		}
+		
+			res=events.get(eventName);
+		
+		
 		return res;
 
 	}
@@ -76,15 +72,21 @@ public class EventDAOImpl implements EventsDAO
 	@Override
 	public Event updateEvent(Event newEvent) {
 		Event res= null;
-		for(int i =0 ;i< eventCount ; i++)
+		if(events.containsKey(newEvent.getEventName()))
 		{
-			if(events[i].getEventId().equals(newEvent.getEventId()))
-			{
-				events[i]=newEvent;
-				res=newEvent;
-			}
+			events.put(newEvent.getEventName(), newEvent);
 		}
 		return res ;
+	}
+
+	@Override
+	public TreeSet<Event> getAllEventsSortedByDate() {
+		for (Map.Entry<String, Event> entry : events.entrySet()) {
+			
+			 sortedEventsByDate.add(entry.getValue()); 
+			
+		}
+		return  sortedEventsByDate;
 	}
 
 }

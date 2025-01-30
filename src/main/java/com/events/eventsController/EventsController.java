@@ -1,6 +1,11 @@
 package com.events.eventsController;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 import com.events.eventsService.EventsService;
 import com.events.pojos.Event;
@@ -57,7 +62,7 @@ public class EventsController
 			System.out.println("5. Logout");
 			System.out.println("Enter your choice");
 			int choice = scanner.nextInt();
-            scanner.nextLine();
+			scanner.nextLine();
 			switch (choice) {
 			case 1:
 				System.out.print("Enter Event ID: ");
@@ -77,32 +82,33 @@ public class EventsController
 				}
 				break;
 			case 2:
-				Event[] events = eventsService.getAllEvents();
-				if (events.length == 0) {
+				TreeSet<Event> events = eventsService.getAllEvents();
+				if (events ==null ) {
 					System.out.println("No events found.");
 				} else {
+
 					for (Event event : events) {
 						System.out.println(event);
 					}
 				}
 				break;
 			case 3:
-				System.out.print("Enter Event ID to delete: ");
-				String eventId = scanner.next();
-				if (eventsService.deleteEvent(eventId)) {
+				System.out.print("Enter Event name to delete: ");
+				String eventName = scanner.nextLine();
+				if (eventsService.deleteEvent(eventName)) {
 					System.out.println("Event deleted successfully!");
 				} else {
 					System.out.println("Event not found.");
 				}
 				break;
 			case 4: System.out.print("Enter Event ID: ");
-		          	String newid = scanner.nextLine();
-			        System.out.print("Enter Event Name: ");
-			        String newname = scanner.nextLine();
-			        System.out.print("Enter Event Date (DD/MM/YYYY): ");
-			        String newdate = scanner.nextLine();
-			        System.out.print("Enter Available Seats: ");
-			        int newseats = scanner.nextInt();
+			String newid = scanner.nextLine();
+			System.out.print("Enter Event Name: ");
+			String newname = scanner.nextLine();
+			System.out.print("Enter Event Date (DD/MM/YYYY): ");
+			String newdate = scanner.nextLine();
+			System.out.print("Enter Available Seats: ");
+			int newseats = scanner.nextInt();
 
 			if (eventsService.updateEvent(new Event(newid, newname, newdate, newseats))!=null) {
 				System.out.println("Event updated successfully!");
@@ -124,16 +130,18 @@ public class EventsController
 			System.out.println("\n--- User Menu ---");
 			System.out.println("1. View Events");
 			System.out.println("2. Register for Event");
-			System.out.println("3. Logout");
+			System.out.println("3. Sort Events By Date");
+			System.out.println("4. Logout");
 			System.out.print("Enter your choice: ");
 			int choice = scanner.nextInt();
 
 			switch (choice) {
 			case 1:
-				Event[] events = eventsService.getAllEvents();
-				if (events.length == 0) {
+				TreeSet<Event> events = eventsService.getAllEvents();
+				if (events.isEmpty()) {
 					System.out.println("No events found.");
 				} else {
+
 					for (Event event : events) {
 						System.out.println(event);
 					}
@@ -144,9 +152,23 @@ public class EventsController
 				String eventId = scanner.next();
 				System.out.println(eventsService.registerForEvent(eventId));
 				break;
+
 			case 3:
+					TreeSet<Event> sortedEventsByDate = eventsService.getAllEventsSortedByDate();
+					if (sortedEventsByDate ==null ) {
+						System.out.println("No events found.");
+					} else {
+
+						for (Event event :sortedEventsByDate) {
+							System.out.println(event);
+						}
+					}
+					break;
+			case 4:
 				System.out.println("Logging out from User Menu.");
 				return;
+
+				
 			default:
 				System.out.println("Invalid choice. Try again.");
 			}

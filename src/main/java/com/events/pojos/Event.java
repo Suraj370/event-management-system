@@ -1,13 +1,13 @@
 package com.events.pojos;
 
-public class Event 
+public class Event implements Comparable<Event>
 {
 	private String eventId;
 	private String eventName;
 	private String eventDate;
-	private int availableSeats;
+	private Integer availableSeats;
 	
-	public Event(String eventId, String eventName, String eventDate, int availableSeats) {
+	public Event(String eventId, String eventName, String eventDate, Integer availableSeats) {
 		super();
 		this.eventId = eventId;
 		this.eventName = eventName;
@@ -36,10 +36,10 @@ public class Event
 	public void setEventDate(String eventDate) {
 		this.eventDate = eventDate;
 	}
-	public int getAvailableSeats() {
+	public Integer getAvailableSeats() {
 		return availableSeats;
 	}
-	public void setAvailableSeats(int availableSeats) {
+	public void setAvailableSeats(Integer availableSeats) {
 		this.availableSeats = availableSeats;
 	}
 	
@@ -48,6 +48,14 @@ public class Event
 		return "Event [eventId=" + eventId + ", eventName=" + eventName + ", eventDate=" + eventDate
 				+ ", availableSeats=" + availableSeats + "]";
 	}
+	
+	
+	@Override
+	public int compareTo(Event o) {
+		return -this.availableSeats.compareTo(o.availableSeats);
+		
+	}
+
 	
 	
 

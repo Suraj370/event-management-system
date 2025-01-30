@@ -1,5 +1,8 @@
 package com.events.eventsService;
 
+import java.util.HashMap;
+import java.util.TreeSet;
+
 import com.events.EventsDAO.EventsDAO;
 import com.events.eventExecptions.EventsFullException;
 import com.events.pojos.Event;
@@ -26,9 +29,9 @@ public class EventsServiceImpl implements EventsService
 	}
 
 	@Override
-	public Event[] getAllEvents() {
+	public TreeSet<Event> getAllEvents() {
 		
-		return eventsDAO.getAllEvents();
+		return  eventsDAO.getAllEvents();
 	}
 
 	@Override
@@ -38,9 +41,9 @@ public class EventsServiceImpl implements EventsService
 	}
 
 	@Override
-	public Event getEventById(String eventId) {
+	public Event getEventByName(String eventName) {
 		
-		return eventsDAO.getEventById(eventId);
+		return eventsDAO.getEventByName(eventName);
 	}
 
 	@Override
@@ -50,7 +53,7 @@ public class EventsServiceImpl implements EventsService
 
 	 public String registerForEvent(String eventId) {
 
-	        Event event = eventsDAO.getEventById(eventId);
+	        Event event = eventsDAO.getEventByName(eventId);
 
 	        if (event == null) {
 
@@ -69,6 +72,12 @@ public class EventsServiceImpl implements EventsService
 	        return "Successfully registered!";
 
 	    }
+
+	@Override
+	public TreeSet<Event> getAllEventsSortedByDate() {
+		
+		return eventsDAO.getAllEventsSortedByDate();
+	}
 
 
 
